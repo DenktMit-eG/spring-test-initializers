@@ -4,9 +4,14 @@
 
     <groupId>de.denktmit.testsupport.spring</groupId>
     <artifactId>spring-test-initializers</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${revision}${sha1}${changelist}</version>
 
     <name>DenktMit eG :: Test Support :: Spring-Test-Initializers</name>
+    <description>The DenktMit eG spring testsupport repository contains useful bits and
+        pieces we continuously reuse in our Spring based development
+
+        This project provides Spring test context initializer useful for managing
+        container provided external services.</description>
 
     <properties>
         <changelist>-SNAPSHOT</changelist>
@@ -26,11 +31,14 @@
         <version.org.apache.maven.plugins.maven-compiler-plugin>3.11.0</version.org.apache.maven.plugins.maven-compiler-plugin>
         <version.org.apache.maven.plugins.maven-deploy-plugin>3.1.1</version.org.apache.maven.plugins.maven-deploy-plugin>
         <version.org.apache.maven.plugins.maven-failsafe-plugin>3.2.2</version.org.apache.maven.plugins.maven-failsafe-plugin>
+        <version.org.apache.maven.plugins.maven-gpg-plugin>3.1.0</version.org.apache.maven.plugins.maven-gpg-plugin>
         <version.org.apache.maven.plugins.maven-install-plugin>3.1.1</version.org.apache.maven.plugins.maven-install-plugin>
         <version.org.apache.maven.plugins.maven-jar-plugin>3.3.0</version.org.apache.maven.plugins.maven-jar-plugin>
+        <version.org.apache.maven.plugins.maven-javadoc-plugin>3.5.0</version.org.apache.maven.plugins.maven-javadoc-plugin>
         <version.org.apache.maven.plugins.maven-project-info-reports-plugin>3.4.5</version.org.apache.maven.plugins.maven-project-info-reports-plugin>
         <version.org.apache.maven.plugins.maven-resources-plugin>3.3.1</version.org.apache.maven.plugins.maven-resources-plugin>
         <version.org.apache.maven.plugins.maven-site-plugin>3.12.1</version.org.apache.maven.plugins.maven-site-plugin>
+        <version.org.apache.maven.plugins.maven-source-plugin>3.3.0</version.org.apache.maven.plugins.maven-source-plugin>
         <version.org.apache.maven.plugins.maven-surefire-plugin>3.1.2</version.org.apache.maven.plugins.maven-surefire-plugin>
         <version.org.assertj>3.24.2</version.org.assertj>
         <version.org.assertj.assertj-core>${version.org.assertj}</version.org.assertj.assertj-core>
@@ -41,6 +49,7 @@
         <version.org.junit-pioneer.junit-pioneer>2.1.0</version.org.junit-pioneer.junit-pioneer>
         <version.org.junit.jupiter.junit-jupiter-engine>${version.org.junit}</version.org.junit.jupiter.junit-jupiter-engine>
         <version.org.postgresql.postgresql>42.6.0</version.org.postgresql.postgresql>
+        <version.org.sonatype.plugins.nexus-staging-maven-plugin>1.6.13</version.org.sonatype.plugins.nexus-staging-maven-plugin>
         <version.org.springframework.boot.spring-boot-test>3.1.5</version.org.springframework.boot.spring-boot-test>
     </properties>
 
@@ -277,20 +286,21 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>${version.org.apache.maven.plugins.maven-resources-plugin}</version>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version.org.apache.maven.plugins.maven-compiler-plugin}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${version.org.apache.maven.plugins.maven-compiler-plugin}</version>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${version.org.apache.maven.plugins.maven-resources-plugin}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${version.org.apache.maven.plugins.maven-surefire-plugin}</version>
                     <configuration>
-                        <argLine>${surefire.jacoco.args} --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                        <argLine>${surefire.jacoco.args} --add-opens java.base/java.util=ALL-UNNAMED --add-opens
+                            java.base/java.lang=ALL-UNNAMED</argLine>
                         <skipTests>${skip.tests.unit}</skipTests>
                     </configuration>
                     <dependencies>
@@ -323,6 +333,32 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${version.org.apache.maven.plugins.maven-source-plugin}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${version.org.apache.maven.plugins.maven-javadoc-plugin}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${version.org.apache.maven.plugins.maven-jar-plugin}</version>
                 </plugin>
@@ -335,6 +371,20 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>${version.org.apache.maven.plugins.maven-deploy-plugin}</version>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>${version.org.sonatype.plugins.nexus-staging-maven-plugin}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -377,6 +427,18 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
@@ -391,8 +453,10 @@
 
     <developers>
         <developer>
-            <name>DenktMit eG</name>
-            <email>hallo@denktmit.de</email>
+            <id>denktmit-eg</id>
+            <name>Marius Schmidt</name>
+            <email>marius.schmidt@denktmit.de</email>
+            <organization>DenktMit eG</organization>
             <organizationUrl>https://denktmit.de</organizationUrl>
         </developer>
     </developers>
@@ -401,7 +465,46 @@
         <connection>scm:git:https://github.com/DenktMit-eG/spring-test-initializers.git</connection>
         <developerConnection>scm:git:git@github.com:DenktMit-eG/spring-test-initializers.git</developerConnection>
         <url>https://github.com/DenktMit-eG/spring-test-initializers</url>
+        <tag>main</tag>
     </scm>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>ci-cd</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${version.org.apache.maven.plugins.maven-gpg-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <!-- Prevent gpg from using pinentry programs. Fixes:
+                                         gpg: signing failed: Inappropriate ioctl for device -->
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
