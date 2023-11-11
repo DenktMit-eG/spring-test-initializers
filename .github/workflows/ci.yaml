@@ -1,4 +1,4 @@
-name: badge-maker CI
+name: CI/CD Spring Test Initializers
 
 on:
   push:
@@ -11,6 +11,19 @@ jobs:
   build:
     name: Build and Release
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15.4-alpine3.18
+        env:
+          POSTGRES_USER: ci-user
+          POSTGRES_PASSWORD: ci-pass
+          POSTGRES_DB: testsupport
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up Maven Central Repository
@@ -23,6 +36,7 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
       - name: Set up Maven cache
         uses: actions/cache@v3
         with:
@@ -30,8 +44,15 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
       - name: Build
         run: mvn -B -ntp clean install
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_USER: ci-user
+          POSTGRES_PASSWORD: ci-pass
+          POSTGRES_DB: testsupport
+
       - name: Release
         if: >
           github.event.release &&
