@@ -47,7 +47,7 @@ jobs:
 
       - name: Build
         run: |
-          ping -c 1 -W 5 example.com >/dev/null || { echo "Server is not reachable."; exit 1; }
+          ping -c 1 -W 5 postgres >/dev/null || { echo "Server is not reachable."; exit 1; }
           mvn -B -ntp clean install
         env:
           POSTGRES_HOST: postgres
