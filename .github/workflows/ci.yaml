@@ -11,8 +11,6 @@ jobs:
   build:
     name: Build and Release
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:23.10
     services:
       postgres:
         image: postgres:15.4-alpine3.18
@@ -25,6 +23,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - uses: actions/checkout@v3
@@ -48,13 +48,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Check PostgreSQL availability
-        run: ping -c 1 -W 5 postgres >/dev/null || { echo "Server is not reachable."; exit 1; }
-
       - name: Build
         run: mvn -B -ntp clean install
         env:
-          POSTGRES_HOST: postgres
+          POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           POSTGRES_USER: ci-user
           POSTGRES_PASSWORD: ci-pass
