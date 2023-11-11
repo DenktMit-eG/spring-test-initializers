@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  # Database for automated integrations tests
+  db-it:
+    image: "postgres:15.4-alpine3.18"
+    container_name: "${COMPOSE_PROJECT_NAME}-db-it"
+    hostname: db-it
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_IT_USER}
+      - POSTGRES_PASSWORD=${DB_IT_PASS}
+      - POSTGRES_DB=${DB_IT_NAME}
+    ports:
+      - "${DB_IT_PORT}:5432"
+    volumes:
+      - db-it-data:/var/lib/postgresql/data
+
+volumes:
+  db-it-data:
