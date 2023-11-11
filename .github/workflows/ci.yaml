@@ -45,8 +45,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Wait for PostgreSQL to start
-        run: sleep 10
+      - name: Debug DNS Resolution
+        run: |
+          nslookup postgres
+          cat /etc/resolv.conf
 
       - name: Check PostgreSQL availability
         run: ping -c 1 -W 5 postgres >/dev/null || { echo "Server is not reachable."; exit 1; }
