@@ -60,9 +60,7 @@ jobs:
           POSTGRES_DB: testsupport
 
       - name: Release
-        if: >
-          github.event.release &&
-          github.ref_name == 'main'
+        if: "github.event.release.published"
         run: |
           # Assign the tag name to a variable
           tag_name="${{ github.event.release.tag_name }}"
