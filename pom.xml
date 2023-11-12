@@ -442,7 +442,7 @@
         </plugins>
     </build>
 
-    <url>https://spring.io/projects/spring-boot/aggregator/application</url>
+    <url>https://github.com/DenktMit-eG/spring-test-initializers</url>
 
     <licenses>
         <license>
