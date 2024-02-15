@@ -7,7 +7,9 @@ container provided external services.
 
 ## The initializers
 ### PostgresInitializer
+
 ### KeycloakInitializer
+
 
 ## Local development
 Please note, that any paths used in this documentation are relative to this
