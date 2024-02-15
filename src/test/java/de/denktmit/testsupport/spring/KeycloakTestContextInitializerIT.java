@@ -4,7 +4,6 @@ import io.restassured.RestAssured;
 import io.restassured.filter.cookie.CookieFilter;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -31,7 +30,7 @@ public class KeycloakTestContextInitializerIT {
     @Test
     void testInitialize() {
         initializer.initialize(ctx);
-        KeycloakTestContextInitializer.Config ic = initializer.getIc();
+        KeycloakTestContextInitializer.Config ic = initializer.getConfig();
         RestAssured.baseURI = ic.getKeycloakAddress();
         CookieFilter cookieFilter = new CookieFilter();
         String authenticationUri = visitAndVerifyLoginPage(ic, cookieFilter);

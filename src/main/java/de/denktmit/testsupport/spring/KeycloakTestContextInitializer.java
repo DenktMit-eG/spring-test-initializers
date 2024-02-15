@@ -30,15 +30,15 @@ import java.util.List;
  * @see ApplicationContextInitializer
  */
 public class KeycloakTestContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-    private Config ic = new Config();
+    private Config config = new Config();
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
-        setupKeycloak(ic);
+        setupKeycloak(config);
         TestPropertyValues.of(
-                "spring.security.oauth2.client.provider.keycloak.issuer-uri=http://" + ic.keycloakAddress + "/auth/realms/" + ic.testRealmName,
-                "spring.security.oauth2.client.registration.keycloak.client-id=" + ic.testClientId,
-                "spring.security.oauth2.client.registration.keycloak.client-secret=" + ic.testClientSecret
+                "spring.security.oauth2.client.provider.keycloak.issuer-uri=http://" + config.keycloakAddress + "/auth/realms/" + config.testRealmName,
+                "spring.security.oauth2.client.registration.keycloak.client-id=" + config.testClientId,
+                "spring.security.oauth2.client.registration.keycloak.client-secret=" + config.testClientSecret
         ).applyTo(applicationContext.getEnvironment());
     }
 
@@ -50,8 +50,13 @@ public class KeycloakTestContextInitializer implements ApplicationContextInitial
         keycloakSession.setupNewUser();
     }
 
-    public Config getIc() {
-        return ic;
+    /**
+     * Gets the resolved {@link Config} to be used by the initializer
+     *
+     * @return resolved {@link Config}
+     */
+    public Config getConfig() {
+        return config;
     }
 
     /**

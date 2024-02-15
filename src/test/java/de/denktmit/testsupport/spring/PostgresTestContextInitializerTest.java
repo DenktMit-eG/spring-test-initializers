@@ -32,13 +32,13 @@ public class PostgresTestContextInitializerTest {
         initializer.initialize(new GenericApplicationContext());
 
         // Verify the properties of the initializerConfig using AssertJ
-        assertThat(initializer.getIc().dbHost).isEqualTo("db.example.com");
-        assertThat(initializer.getIc().dbPort).isEqualTo(5432);
-        assertThat(initializer.getIc().dbName).isEqualTo("prod");
-        assertThat(initializer.getIc().dbUser).isEqualTo("db-test-user");
-        assertThat(initializer.getIc().dbPassword).isEqualTo("db-test-password");
-        assertThat(initializer.getIc().flywayClean).isFalse();
-        assertThat(initializer.getIc().flywayMigrate).isFalse();
+        assertThat(initializer.getConfig().dbHost).isEqualTo("db.example.com");
+        assertThat(initializer.getConfig().dbPort).isEqualTo(5432);
+        assertThat(initializer.getConfig().dbName).isEqualTo("prod");
+        assertThat(initializer.getConfig().dbUser).isEqualTo("db-test-user");
+        assertThat(initializer.getConfig().dbPassword).isEqualTo("db-test-password");
+        assertThat(initializer.getConfig().flywayClean).isFalse();
+        assertThat(initializer.getConfig().flywayMigrate).isFalse();
 
     }
 

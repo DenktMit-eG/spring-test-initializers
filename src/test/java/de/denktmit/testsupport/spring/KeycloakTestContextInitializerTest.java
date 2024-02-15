@@ -2,7 +2,6 @@ package de.denktmit.testsupport.spring;
 
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
-import org.springframework.context.support.GenericApplicationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +26,7 @@ public class KeycloakTestContextInitializerTest {
         KeycloakTestContextInitializer initializer = new KeycloakTestContextInitializer();
 
         // Verify the properties of the initializerConfig using AssertJ
-        KeycloakTestContextInitializer.Config ic = initializer.getIc();
+        KeycloakTestContextInitializer.Config ic = initializer.getConfig();
         assertThat(ic.getKeycloakUriSchema()).isEqualTo("https");
         assertThat(ic.getKeycloakHost()).isEqualTo("keycloak.dangerzone.denktmit.tech");
         assertThat(ic.getKeycloakPort()).isEqualTo(28080);

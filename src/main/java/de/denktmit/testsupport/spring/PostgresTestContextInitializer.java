@@ -50,6 +50,10 @@ public class PostgresTestContextInitializer implements ApplicationContextInitial
      */
     public static boolean DEFAULT_FLYWAY_MIGRATE = true;
 
+    /**
+     * Configuration class holding values for Postgres setup. Provides default values
+     * that can be overridden using environment variable .
+     */
     public static class Config {
         String dbHost = System.getenv("POSTGRES_HOST") != null ? System.getenv("POSTGRES_HOST") : DEFAULT_HOST;
         int dbPort = System.getenv("POSTGRES_PORT") != null ? Integer.parseInt(System.getenv("POSTGRES_PORT")) : DEFAULT_PORT;
@@ -61,12 +65,12 @@ public class PostgresTestContextInitializer implements ApplicationContextInitial
         boolean flywayMigrate = System.getenv("FLYWAY_MIGRATE") != null ? Boolean.parseBoolean(System.getenv("FLYWAY_MIGRATE")) : DEFAULT_FLYWAY_MIGRATE;
     }
 
-    private final Config ic = new Config();
+    private final Config config = new Config();
 
     @Override
     public void initialize(@NonNull ConfigurableApplicationContext configurableApplicationContext) {
-        injectIntoSpringTestContext(configurableApplicationContext, ic);
-        resetDBWithFlyway(ic);
+        injectIntoSpringTestContext(configurableApplicationContext, config);
+        resetDBWithFlyway(config);
     }
 
     private void injectIntoSpringTestContext(ConfigurableApplicationContext configurableApplicationContext, Config config) {
@@ -91,7 +95,13 @@ public class PostgresTestContextInitializer implements ApplicationContextInitial
         }
     }
 
-    public Config getIc() {
-        return ic;
+
+    /**
+     * Gets the resolved {@link Config} to be used by the initializer
+     *
+     * @return resolved {@link Config}
+     */
+    public Config getConfig() {
+        return config;
     }
 }
