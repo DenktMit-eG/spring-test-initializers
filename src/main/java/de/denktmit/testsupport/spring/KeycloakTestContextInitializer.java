@@ -1,5 +1,6 @@
 package de.denktmit.testsupport.spring;
 
+import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -11,7 +12,6 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
 
@@ -299,7 +299,7 @@ public class KeycloakTestContextInitializer implements ApplicationContextInitial
 
         private void connectAdminClient() {
             keycloakAdminClient = KeycloakBuilder.builder()
-                    .serverUrl(ic.keycloakAddress + "/auth")
+                    .serverUrl(ic.keycloakAddress)
                     .realm(ic.keycloakMasterRealm)
                     .clientId(ic.keycloakAdminClientId)
                     .username(ic.keycloakAdminName)
@@ -360,7 +360,7 @@ public class KeycloakTestContextInitializer implements ApplicationContextInitial
                         setUsername(ic.testAdminUsername);
                         setFirstName("JUnit");
                         setLastName("Tester");
-                        setEmail("junit+tester1@gec.io");
+                        setEmail("junit+tester1@denktmit.de");
                         setAttributes(java.util.Collections.singletonMap("origin", List.of("demo")));
                     }}
             );

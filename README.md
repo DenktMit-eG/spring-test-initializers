@@ -69,12 +69,3 @@ docker compose  --env-file .env-dev -f docker-compose.dev.yaml down
 # Remove the persistent docker volumes
 docker volume rm ${COMPOSE_PROJECT_NAME}_db-it-data
 ```
-
-#### Prepare the database with testdata
-The pom.xml file of the persistence module defines Flyway executions to
-fill the dev and it databases with testdata.
-
-Fill integration test database with testdata (done automatically in maven build)
-```bash
-./mvnw flyway:migrate@fill-it -Dflyway.configFiles=../.flyway.it.conf -f ./persistence/pom.xml
-```
