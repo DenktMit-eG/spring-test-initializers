@@ -25,9 +25,9 @@ public class PostgresTestContextInitializerIT {
     }
 
     void dropAllTablesIfExistent() throws Exception {
-        String jdbcUrl = initializer.getIc().dbUrl;
-        String username = initializer.getIc().dbUser;
-        String password = initializer.getIc().dbPassword;
+        String jdbcUrl = initializer.getConfig().dbUrl;
+        String username = initializer.getConfig().dbUser;
+        String password = initializer.getConfig().dbPassword;
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password); Statement statement = connection.createStatement()) {
             statement.execute("DROP TABLE IF EXISTS example_table");
             statement.execute("DROP TABLE IF EXISTS flyway_schema_history");
@@ -45,16 +45,16 @@ public class PostgresTestContextInitializerIT {
     private void validateSpringIntegration() {
         PropertySource<?> testPropertySource = ctx.getEnvironment().getPropertySources().get("test");
         assertThat(testPropertySource).isNotNull();
-        assertThat(testPropertySource.getProperty("spring.datasource.url")).isEqualTo(initializer.getIc().dbUrl);
-        assertThat(testPropertySource.getProperty("spring.datasource.username")).isEqualTo(initializer.getIc().dbUser);
-        assertThat(testPropertySource.getProperty("spring.datasource.password")).isEqualTo(initializer.getIc().dbPassword);
+        assertThat(testPropertySource.getProperty("spring.datasource.url")).isEqualTo(initializer.getConfig().dbUrl);
+        assertThat(testPropertySource.getProperty("spring.datasource.username")).isEqualTo(initializer.getConfig().dbUser);
+        assertThat(testPropertySource.getProperty("spring.datasource.password")).isEqualTo(initializer.getConfig().dbPassword);
     }
 
     void validateDataInExampleTable() throws Exception {
         // Database connection information
-        String jdbcUrl = initializer.getIc().dbUrl;
-        String username = initializer.getIc().dbUser;
-        String password = initializer.getIc().dbPassword;
+        String jdbcUrl = initializer.getConfig().dbUrl;
+        String username = initializer.getConfig().dbUser;
+        String password = initializer.getConfig().dbPassword;
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
              Statement statement = connection.createStatement();

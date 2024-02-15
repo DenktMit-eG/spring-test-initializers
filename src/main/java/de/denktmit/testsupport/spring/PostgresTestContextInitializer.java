@@ -50,7 +50,11 @@ public class PostgresTestContextInitializer implements ApplicationContextInitial
      */
     public static boolean DEFAULT_FLYWAY_MIGRATE = true;
 
-    public static class InitializerConfig {
+    /**
+     * Configuration class holding values for Postgres setup. Provides default values
+     * that can be overridden using environment variable .
+     */
+    public static class Config {
         String dbHost = System.getenv("POSTGRES_HOST") != null ? System.getenv("POSTGRES_HOST") : DEFAULT_HOST;
         int dbPort = System.getenv("POSTGRES_PORT") != null ? Integer.parseInt(System.getenv("POSTGRES_PORT")) : DEFAULT_PORT;
         String dbName = System.getenv("POSTGRES_DB") != null ? System.getenv("POSTGRES_DB") : DEFAULT_DB_NAME;
@@ -61,23 +65,23 @@ public class PostgresTestContextInitializer implements ApplicationContextInitial
         boolean flywayMigrate = System.getenv("FLYWAY_MIGRATE") != null ? Boolean.parseBoolean(System.getenv("FLYWAY_MIGRATE")) : DEFAULT_FLYWAY_MIGRATE;
     }
 
-    private final InitializerConfig ic = new InitializerConfig();
+    private final Config config = new Config();
 
     @Override
     public void initialize(@NonNull ConfigurableApplicationContext configurableApplicationContext) {
-        injectIntoSpringTestContext(configurableApplicationContext, ic);
-        resetDBWithFlyway(ic);
+        injectIntoSpringTestContext(configurableApplicationContext, config);
+        resetDBWithFlyway(config);
     }
 
-    private void injectIntoSpringTestContext(ConfigurableApplicationContext configurableApplicationContext, InitializerConfig initializerConfig) {
+    private void injectIntoSpringTestContext(ConfigurableApplicationContext configurableApplicationContext, Config config) {
         TestPropertyValues.of(
-                "spring.datasource.url=" + initializerConfig.dbUrl,
-                "spring.datasource.username=" + initializerConfig.dbUser,
-                "spring.datasource.password=" + initializerConfig.dbPassword
+                "spring.datasource.url=" + config.dbUrl,
+                "spring.datasource.username=" + config.dbUser,
+                "spring.datasource.password=" + config.dbPassword
         ).applyTo(configurableApplicationContext.getEnvironment());
     }
 
-    private void resetDBWithFlyway(InitializerConfig ic) {
+    private void resetDBWithFlyway(Config ic) {
         ClassicConfiguration config = new ClassicConfiguration();
         config.setCleanDisabled(false);
         config.setLocationsAsStrings("");
@@ -91,7 +95,13 @@ public class PostgresTestContextInitializer implements ApplicationContextInitial
         }
     }
 
-    public InitializerConfig getIc() {
-        return ic;
+
+    /**
+     * Gets the resolved {@link Config} to be used by the initializer
+     *
+     * @return resolved {@link Config}
+     */
+    public Config getConfig() {
+        return config;
     }
 }
