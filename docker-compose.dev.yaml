@@ -15,13 +15,13 @@ services:
     volumes:
       - db-it-data:/var/lib/postgresql/data
   keycloak-it:
-    image: "jboss/keycloak:11.0.0"
+    image: "denktmiteg/keycloak-dev:23.0.6-latest"
     container_name: "${COMPOSE_PROJECT_NAME}-keycloak-it"
     hostname: keycloak-it
     restart: unless-stopped
     environment:
-      - "KEYCLOAK_USER=admin"
-      - "KEYCLOAK_PASSWORD=admin"
+      - "KEYCLOAK_ADMIN=admin"
+      - "KEYCLOAK_ADMIN_PASSWORD=admin"
       - "DB_VENDOR=h2"
     ports:
       - "18080:8080"

@@ -47,7 +47,7 @@ public class KeycloakTestContextInitializerIT {
                 .queryParam("scope", "openid")
 
                 .when()
-                .request(GET, "/auth/realms/{realmName}/protocol/openid-connect/auth", ic.getTestRealmName())
+                .request(GET, "/realms/{realmName}/protocol/openid-connect/auth", ic.getTestRealmName())
 
                 .then()
                 .statusCode(200)
@@ -59,7 +59,7 @@ public class KeycloakTestContextInitializerIT {
     }
 
     private static void login(KeycloakTestContextInitializer.Config ic, CookieFilter cookieFilter, String authenticationUri) {
-        String redirectUri = ic.getKeycloakAddress() + "/auth/realms/" + ic.getTestRealmName() + "/login-actions/authenticate";
+        String redirectUri = ic.getKeycloakAddress() + "/realms/" + ic.getTestRealmName() + "/login-actions/authenticate";
         RestAssured
                 .given()
                 .filter(cookieFilter)
